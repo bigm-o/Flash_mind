@@ -1,0 +1,5 @@
+# Ignore Streamlit secrets file to prevent exposing API keys
+.streamlit/
+
+# Virtual environment directory
+ai_app_env/
