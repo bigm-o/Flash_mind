@@ -1,9 +1,3 @@
-# Ignore the entire .streamlit directory initially
-.streamlit/
-
-# But un-ignore (include) the config.toml file within it
-!.streamlit/config.toml
-
 # And explicitly ignore the secrets.toml file
 .streamlit/secrets.toml
 
