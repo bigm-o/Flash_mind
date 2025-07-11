@@ -23,15 +23,18 @@ FlashMind AI is a Streamlit application that leverages Google's Gemini-1.5-Flash
 
 ### 👨‍💻 App UI
 #### 🔃 Multiple background image functionality
-The background image dynamically changes each time the user reloads the app, to give an interactive feel to it:
+The background image dynamically changes each time the user reloads the app, to give an interactive feel to it  
 
-![Screenshot 2025-07-02 162910 (1)](https://github.com/user-attachments/assets/0eeba5c7-d90b-4e85-b6e9-c5b5dd488f4e)
+### 📱 Extra responsiveness to hide unnecesary elements when viewed on mobile. (hide-on-mobile) 
 
-![Screenshot 2025-07-02 120412 (1)](https://github.com/user-attachments/assets/ed6c6386-6b81-4c3b-b4c2-d368a3e1053e)
+### 📱 UI for Email sending Utility with SendGrid
+---
+<img width="1200" alt="Screenshot 2025-07-11 130431" src="https://github.com/user-attachments/assets/87510da4-99a0-4ba8-ad7e-3d2c9a7b0de9" />
 
-### 📱 Extra responsiveness to hide unnecesary elements when viewed on mobile. (hide-on-mobile)  
+<img width="970" height="716" alt="Screenshot 2025-07-11 134415" src="https://github.com/user-attachments/assets/ddd3935b-b849-429d-9bbd-a764f30918ad" />
 
-![Screenshot 2025-07-02 174112 (1)](https://github.com/user-attachments/assets/9b83d15a-e79a-4178-921e-1f098463c640)
+---
+
 
 
 In the image folder, the background images (i.e., `image(image_number).jpg`) are fed into the `app.py` with base64 to encode the image. Randint is used to cycle throught the images, so that it can display a different image each time the app is run:
