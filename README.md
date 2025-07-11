@@ -23,7 +23,7 @@ FlashMind AI is a Streamlit application that leverages Google's Gemini-1.5-Flash
 
 ### 👨‍💻 App UI
 #### 🔃 Multiple background image functionality
-The background image dynamically changes each time the user reloads the app, to give an interactive feel to it  
+The background image dynamically changes each time the streamlit session state changes, to give an interactive feel to it  
 
 ### 📱 Extra responsiveness to hide unnecesary elements when viewed on mobile. (hide-on-mobile) 
 
