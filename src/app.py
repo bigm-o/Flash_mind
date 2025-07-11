@@ -141,14 +141,14 @@ except Exception as e:
 
 # --- Read the prompt from prompt.txt ---
 try:
-    # Ensure this path is correct, e.g., 'src/prompt2.txt' or 'prompt.txt'
-    with open("src/prompt2.txt", "r") as f:
+    # Ensure this path is correct, e.g., 'src/prompt.txt' or 'prompt.txt'
+    with open("src/prompt.txt", "r") as f:
         system_instruction_prompt = f.read().strip()
 except FileNotFoundError:
-    st.error("Error: 'src/prompt2.txt' not found. Please make sure the prompt file is in the 'src' directory.")
+    st.error("Error: 'src/prompt.txt' not found. Please make sure the prompt file is in the 'src' directory.")
     st.stop()
 except Exception as e:
-    st.error(f"Error reading 'src/prompt2.txt': {e}")
+    st.error(f"Error reading 'src/prompt.txt': {e}")
     st.stop()
 
 # --- Functions for Document Text Extraction ---
@@ -226,7 +226,7 @@ def send_flashcards_email(recipient_email, flashcards_data, subject_title="Flash
         <style>
             body {{ font-family: 'Poppins', sans-serif; line-height: 1.6; color: #333; }}
             .container {{ max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; }}
-            h2 {{ color: #0056b3; }}
+            h2 {{ color: #008000; }}
             .flashcard-section {{ margin-bottom: 20px; border: 1px dashed #ccc; padding: 15px; border-radius: 5px; background-color: #fff; }}
             .question {{ font-weight: bold; color: #555; }}
             .answer {{ color: #008000; margin-top: 5px; }}
@@ -263,7 +263,7 @@ def send_flashcards_email(recipient_email, flashcards_data, subject_title="Flash
         sg = sendgrid.SendGridAPIClient(sendgrid_api_key)
         from_email = Email(sender_email)  # Your verified sender email
         to_email = To(recipient_email)
-        subject = f"FlashMind AI: Your Flashcards on {subject_title}"
+        subject = f"Your Flashcards from FlashMind AI have arrived!!!"
         content = Content("text/html", email_body_html)
         
         message = Mail(from_email, to_email, subject, content)
@@ -352,7 +352,7 @@ def generate_flashcards(source_text, max_flashcards=15):
             }
 
             .flashcard .front{
-                width: 90%;
+                width: 85%;
                 height: 100%;
                 border: 1px dashed white;
                 border-radius: 15px;
@@ -371,7 +371,7 @@ def generate_flashcards(source_text, max_flashcards=15):
             .flashcard .back {
                 transform: rotateY(180deg);
                 color: #67f88e;
-                width: 90%;
+                width: 85%;
                 height: 100%;
                 border: 1px dashed #67f88e;
                 border-radius: 15px;
