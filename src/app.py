@@ -10,6 +10,10 @@ from PyPDF2 import PdfReader # For .pdf files
 import streamlit.components.v1 as components
 import json
 
+# Import SendGrid libraries
+import sendgrid
+from sendgrid.helpers.mail import Mail, Email, To, Content
+
 # --- Gemini API Configuration ---
 gemini_api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_key")
 
@@ -197,6 +201,85 @@ if "flashcards_for_message_idx" not in st.session_state:
     st.session_state.flashcards_for_message_idx = -1 # Stores the index of the AI message for which flashcards are shown
 if "initial_flashcards_generated" not in st.session_state:
     st.session_state.initial_flashcards_generated = False # Track if initial flashcards for notes are generated
+if "show_email_form" not in st.session_state:
+    st.session_state.show_email_form = False # New state for showing email form
+if "generated_flashcards_data" not in st.session_state:
+    st.session_state.generated_flashcards_data = [] # Store the generated flashcards
+
+# --- Email Sending Utility (SendGrid Integration) ---
+def send_flashcards_email(recipient_email, flashcards_data, subject_title="FlashMind AI Flashcards"):
+    """
+    Sends flashcards via email using SendGrid.
+    Requires SENDGRID_API_KEY and SENDER_EMAIL to be set in .streamlit/secrets.toml
+    """
+    sendgrid_api_key = st.secrets.get("SENDGRID_API_KEY")
+    sender_email = st.secrets.get("SENDER_EMAIL")
+
+    if not sendgrid_api_key or not sender_email:
+        st.error("Email sending is not configured. Please set SENDGRID_API_KEY and SENDER_EMAIL in your `.streamlit/secrets.toml` file.")
+        return
+
+    # Construct HTML email body
+    email_body_html = f"""
+    <html>
+    <head>
+        <style>
+            body {{ font-family: 'Poppins', sans-serif; line-height: 1.6; color: #333; }}
+            .container {{ max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; }}
+            h2 {{ color: #0056b3; }}
+            .flashcard-section {{ margin-bottom: 20px; border: 1px dashed #ccc; padding: 15px; border-radius: 5px; background-color: #fff; }}
+            .question {{ font-weight: bold; color: #555; }}
+            .answer {{ color: #008000; margin-top: 5px; }}
+            .footer {{ margin-top: 30px; font-size: 0.9em; color: #777; text-align: center; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>Your Flashcards on "{subject_title}" from FlashMind AI</h2>
+            <p>Hello,</p>
+            <p>Here are the flashcards you requested:</p>
+    """
+
+    for i, card in enumerate(flashcards_data):
+        email_body_html += f"""
+            <div class="flashcard-section">
+                <p class="question"><strong>Q{i+1}:</strong> {card['question']}</p>
+                <p class="answer"><strong>A{i+1}:</strong> {card['answer']}</p>
+            </div>
+        """
+    
+    email_body_html += f"""
+            <p>Happy learning!</p>
+            <p>Best regards,<br>The FlashMind AI Team</p>
+            <div class="footer">
+                <p>This email was sent from FlashMind AI. <a href="https://github.com/bigm-o/Flash_mind.git">Visit our GitHub!</a></p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    try:
+        sg = sendgrid.SendGridAPIClient(sendgrid_api_key)
+        from_email = Email(sender_email)  # Your verified sender email
+        to_email = To(recipient_email)
+        subject = f"FlashMind AI: Your Flashcards on {subject_title}"
+        content = Content("text/html", email_body_html)
+        
+        message = Mail(from_email, to_email, subject, content)
+        
+        response = sg.client.mail.send.post(request_body=message.get())
+
+        if response.status_code == 202:
+            st.success(f"Flashcards sent successfully to **{recipient_email}**!")
+        else:
+            st.error(f"Failed to send email. Status Code: {response.status_code}")
+            st.error(f"Response Body: {response.body}")
+            st.error(f"Response Headers: {response.headers}")
+
+    except Exception as e:
+        st.error(f"An error occurred while sending the email: {e}")
+        st.warning("Please ensure your SendGrid API Key and Sender Email are correctly configured and verified.")
 
 
 # --- Flashcard Generation Function ---
@@ -247,13 +330,18 @@ def generate_flashcards(source_text, max_flashcards=15):
             st.info("No valid flashcards could be parsed from the AI's response.")
             return
 
+        # Store generated flashcards in session state
+        st.session_state.generated_flashcards_data = flashcards_data
+
         # --- Dynamically construct the HTML string ---
         # The CSS for the flipping effect
         css = """
         <style>
             .flashcard-container{
                 padding-bottom: 2rem;
+                align-items: center;
             }
+
             .flashcard {
                 background-color: transparent;
                 width: 350px;
@@ -264,7 +352,7 @@ def generate_flashcards(source_text, max_flashcards=15):
             }
 
             .flashcard .front{
-                width: 100%;
+                width: 90%;
                 height: 100%;
                 border: 1px dashed white;
                 border-radius: 15px;
@@ -275,7 +363,7 @@ def generate_flashcards(source_text, max_flashcards=15):
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 1.6rem;
+                font-size: 1.4rem;
                 background: rgba(0, 0, 0, 0.1);
                 color: white;
             }
@@ -283,7 +371,7 @@ def generate_flashcards(source_text, max_flashcards=15):
             .flashcard .back {
                 transform: rotateY(180deg);
                 color: #67f88e;
-                width: 100%;
+                width: 90%;
                 height: 100%;
                 border: 1px dashed #67f88e;
                 border-radius: 15px;
@@ -294,8 +382,9 @@ def generate_flashcards(source_text, max_flashcards=15):
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 1.4rem;
+                font-size: 1.2rem;
                 background: rgba(0, 0, 0, 0.1);
+                color: #67f88e; /* Changed to match border color */
             }
 
             .flashcard {
@@ -372,6 +461,11 @@ def generate_flashcards(source_text, max_flashcards=15):
         estimated_height = len(flashcards_data) * 200 
         components.html(html_content, height=estimated_height, scrolling=False)
 
+        # Add the "Email Flashcards" button
+        st.markdown("---") # Separator
+        if st.button("📧 Email Flashcards", key="email_flashcards_button"):
+            st.session_state.show_email_form = not st.session_state.show_email_form # Toggle form visibility
+            st.rerun()
 
     except Exception as e:
         st.error(f"An error occurred while generating flashcards: {e}")
@@ -427,6 +521,27 @@ if st.session_state.app_state == "chatting" or len(st.session_state.messages) > 
             st.session_state.flashcards_for_message_idx = -1
             st.warning("Could not find the associated AI response for flashcards.")
 
+    # Email input form (appears when show_email_form is True)
+    if st.session_state.show_email_form and st.session_state.generated_flashcards_data:
+        st.markdown("---") # Separator
+        st.subheader("Send Flashcards via Email")
+        with st.form("email_flashcards_form"):
+            user_email = st.text_input("Enter your email address:", key="email_input")
+            submit_email = st.form_submit_button("Send Email")
+
+            if submit_email:
+                if user_email and "@" in user_email and "." in user_email: # Simple email validation
+                    send_flashcards_email(user_email, st.session_state.generated_flashcards_data, st.session_state.subject_title)
+                    st.session_state.show_email_form = False # Hide form after submission
+                    st.rerun()
+                else:
+                    st.error("Please enter a valid email address.")
+    elif st.session_state.show_email_form and not st.session_state.generated_flashcards_data:
+        st.warning("No flashcards have been generated to send via email yet.")
+        if st.button("Close Email Form", key="close_empty_email_form"):
+            st.session_state.show_email_form = False
+            st.rerun()
+
 
 # Initial input options (Upload Document / Paste Text)
 if st.session_state.app_state == "initial_input":
@@ -443,6 +558,7 @@ if st.session_state.app_state == "initial_input":
             """,
             unsafe_allow_html=True
         )
+        # Hidden button for the "Upload Document" box click
         if st.button("Hidden Upload Trigger", key="hidden_upload_trigger", help="Click to upload"):
             st.session_state.app_state = "uploading_document"
             st.rerun()
@@ -457,13 +573,18 @@ if st.session_state.app_state == "initial_input":
             """,
             unsafe_allow_html=True
         )
+        # Hidden button for the "Paste Text" box click
         if st.button("Hidden Paste Trigger", key="hidden_paste_trigger", help="Click to paste"):
             st.session_state.app_state = "pasting_text"
             st.rerun()
 
+        # JavaScript to trigger the hidden buttons on box click
         st.markdown(
             """
             <script>
+            document.getElementById('upload_doc_box').onclick = function() {
+                document.querySelector('button[key="hidden_upload_trigger"]').click();
+            };
             document.getElementById('paste_text_box').onclick = function() {
                 document.querySelector('button[key="hidden_paste_trigger"]').click();
             };
@@ -612,6 +733,7 @@ elif st.session_state.app_state == "chatting":
 
         st.session_state.first_chat_used = True
         st.session_state.flashcards_for_message_idx = -1 # Reset flashcards when user sends new message
+        st.session_state.show_email_form = False # Hide email form when user sends new message
 
         st.session_state.messages.append({"role": "user", "parts": user_message_parts})
         with st.chat_message("user"):

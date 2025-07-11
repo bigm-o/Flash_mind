@@ -1,12 +1,23 @@
-# 🤖 Code Correct: Your Intelligent AI Programming Assistant 🚀
+# 🧠 FlashMind AI
 
-## ✨ Fix Code, Understand Concepts, Troubleshoot Software ✨
+Turn your notes into knowledge: Flashcards & Q&A powered by AI.
 
-### Introduction
+FlashMind AI is a Streamlit application that leverages Google's Gemini-1.5-Flash model to help users convert their study notes and documents into interactive flashcards and engage in a Q&A session. It supports various document formats (PDF, DOCX, TXT) and allows users to paste text directly. The application also provides an option to email generated flashcards for convenient offline access.
 
-**Code Correct** is an innovative AI-powered chatbot designed to be your ultimate companion in the world of programming and software development. Built with Streamlit and powered by Google's Gemini API, this application provides instant, intelligent assistance for debugging code, answering complex programming questions, and even troubleshooting PC software issues.
+---
 
-Say goodbye to endless Stack Overflow searches and frustrating debugging sessions. Code Correct is here to streamline your workflow and enhance your understanding, helping you write cleaner, more efficient code and keep your development environment running smoothly.
+
+## ✨ Features
+
+* **Document Upload**: Upload PDF, DOCX, or TXT files containing your notes.
+* **Text Input**: Paste text directly into the application.
+* **AI-Powered Flashcard Generation**: Automatically generates interactive flashcards (Question & Answer pairs) from your uploaded or pasted content.
+* **Interactive Flashcards**: Click to flip flashcards and reveal answers, enhancing the learning experience.
+* **Intelligent Q&A Chatbot**: Engage in a conversational chat with the AI to ask questions and gain deeper insights into your study material.
+* **Dynamic Subject Titling**: The AI automatically infers and displays a subject title for your uploaded/pasted content.
+* **Email Flashcards**: Send generated flashcards to any email address for easy access and review.
+* **Responsive Design**: Adapts to different screen sizes for optimal viewing on both desktop and mobile.
+* **Customizable Theme**: Features a visually appealing interface with dynamic background images and custom CSS.
 
 ---
 
@@ -23,140 +34,6 @@ The background image dynamically changes each time the user reloads the app, to 
 ![Screenshot 2025-07-02 174112 (1)](https://github.com/user-attachments/assets/9b83d15a-e79a-4178-921e-1f098463c640)
 
 
----
-
-### Key Features 🌟
-
-* **Intelligent Code Correction & Debugging:** 🐛🛠️💡
-    * Submit your code snippets, and Code Correct will identify errors, suggest fixes, and provide the corrected code.
-    * Receive detailed, step-by-step explanations of *why* the error occurred and *how* it was resolved, fostering a deeper understanding of programming concepts.
-    * Get recommendations for best practices, code optimization, and adherence to coding standards.
-
-* **Comprehensive Programming Q&A:** ❓📚🧠
-    * Ask any question related to programming languages, algorithms, data structures, software design patterns, specific libraries, frameworks, or development methodologies.
-    * Receive clear, accurate, and comprehensive answers, often accompanied by illustrative code examples.
-
-* **PC Software Troubleshooting:** 💻🩺⚙️
-    * Describe software problems you're facing on your personal computer (e.g., application crashes, driver issues, OS errors).
-    * Code Correct will diagnose potential causes and provide actionable, step-by-step troubleshooting guides to help you resolve the issues.
-
-* **Context-Aware & Focused:** 🎯🧠
-    * The AI is specifically engineered to stay within the domain of programming, coding, and software troubleshooting.
-    * Politely redirects out-of-context queries, ensuring a focused and efficient problem-solving experience.
-
-* **Aesthetically Pleasing & User-Friendly Interface:** ✨🎨📱
-    * A clean, modern interface built with Streamlit.
-    * Custom CSS for a visually appealing dark theme with a subtle background image.
-    * Bolder, more visible input fields for enhanced usability.
-
----
-
-### Why Code Correct? 🤔
-
-* **Boost Productivity:** ⚡🚀 Get instant answers and solutions, reducing time spent on debugging and research.
-
-* **Learn & Grow:** 🌱🎓 Detailed explanations help you understand underlying concepts, turning debugging into a learning opportunity.
-
-* **Reliable Assistance:** ✅🛡️ Powered by a robust AI model and guided by expert prompt engineering techniques (Chain of Thought, Guardrails, Few-Shot learning).
-
-* **All-in-One Solution:** 📦🌐 From syntax errors to software glitches, get comprehensive support in one place.
-
----
-
-### Getting Started 🚀
-
-Follow these steps to set up and run Code Correct on your local machine.
-
-#### Prerequisites ✅
-
-* Python 3.8+
-* `pip` (Python package installer)
-* A Google Cloud Project with the Gemini API enabled.
-* A Gemini API Key.
-
-#### 1. Clone the Repository ⬇️📂
-
-First, clone this repository to your local machine:
-
-```bash
-git clone [https://github.com/bigm-o/code_correct.git](https://github.com/bigm-o/code_correct.git)
-cd code_correct/src
-```
-
-### 2. Create a Virtual Environment (Recommended) 🐍📦
-
-It's good practice to use a virtual environment to manage dependencies:
-
-```bash
-python -m venv venv
-```
-
-* **On Windows:**
-    ```bash
-    .\venv\Scripts\activate
-    ```
-* **On macOS/Linux:**
-    ```bash
-    source venv/bin/activate
-    ```
-
-### 3. Install Dependencies ⚙️📦
-
-Navigate into the `src` directory (where `app.py` and `requirements.txt` are located) and install the necessary libraries:
-
-```bash
-cd src
-pip install -r requirements.txt
-```
-
-Your `requirements.txt` should be clean and minimal, like this:
-
-```
-streamlit
-google-generativeai
-Pillow
-```
-
-### 4. Set Up Your Gemini API Key 🔑🔒
-
-Streamlit can securely manage your API keys using `secrets.toml`.
-
-Create a `.streamlit` folder in the root of your project (the `code_correct` directory, *not* inside `src`). Inside `.streamlit`, create a file named `secrets.toml` with your Gemini API key:
-
-```toml
-# .streamlit/secrets.toml
-GEMINI_API_KEY="YOUR_GEMINI_API_KEY_HERE"
-```
-
-Alternatively, you can set it as an environment variable: `GEMINI_API_KEY="YOUR_GEMINI_API_KEY_HERE"`.
-
-### 5. Place Your Prompt File 📝🧠
-
-Ensure you have a `prompt.txt` file in the `src` directory, containing the refined prompt for the AI's behavior. For example, using the "Balanced Edition" prompt we developed:
-
-```
-# prompt.txt content
-You are "Code Correct," an expert AI for all things programming, coding, debugging, and PC software troubleshooting. Your core purpose is to provide clear, accurate, and actionable solutions exclusively within these domains.
-
-### Core Capabilities & Approach:
-
-* **Code Correction & Explanation:** When given code, you'll **fix it**, then provide a **step-by-step breakdown** of the problem, its cause, and the exact solution. Your explanations will be educational, akin to a mentor guiding a student.
-* **Programming Q&A:** Answer any question about programming concepts, languages, algorithms, data structures, and best practices. Explain clearly, using examples where helpful.
-* **PC Software Troubleshooting:** Diagnose user-reported PC software issues (e.g., application errors, OS problems) and provide **actionable troubleshooting steps** and potential solutions.
-
-### Prompt Engineering Directives:
-
-1.  **Chain of Thought (Internal):** For every task, you'll internally analyze the problem (code errors, user questions, software symptoms), diagnose the root cause, determine the optimal solution, and then structure a logical, step-by-step explanation for the user.
-2.  **Few-Shot (Learned Patterns):** You've absorbed thousands of successful code fixes, clear programming explanations, and effective troubleshooting flows. Apply these learned patterns to new, similar problems.
-3.  **Guardrails (Context Specificity):**
-    * **Strict Domain:** Your expertise is **solely** programming, coding, debugging, and PC software.
-    * **Out-of-Context Handling:** If a user's query falls outside this scope, respond politely but firmly: "I specialize in programming, coding, and software troubleshooting. Please ask me a question related to those topics, and I'll be happy to help!"
-    * **Clarification:** If a request is unclear or lacks detail, ask precise questions to get the necessary information (e.g., "Please provide the code snippet and any error messages").
-4.  **Tone & Formatting:** Maintain an **expert, helpful, and educational** tone. Use **code blocks** for code, **bolding** for keywords, and **bullet points/numbered lists** for steps to ensure maximum readability and clarity.
-```
-
-### 6. Background Images 🖼️🎨
-
 In the image folder, the background images (i.e., `image(image_number).jpg`) are fed into the `app.py` with base64 to encode the image. Randint is used to cycle throught the images, so that it can display a different image each time the app is run:
 
 ```python
@@ -164,24 +41,102 @@ image_number = random.randint(1, 6)
 BACKGROUND_IMAGE_PATH = f"images/image{image_number}.jpg"
 encoded_background_image = get_base64_image(BACKGROUND_IMAGE_PATH)
 ```
+---
 
-### 7. Run the Application ▶️🚀
+### Why Flashmind AI? 🤔
 
-With your virtual environment activated and all files in place, run the Streamlit app from the `src` directory:
+* **Boost Productivity:** ⚡🚀 Get instant Q&A with an interrcative feel, to make the user have the flashcard experience.
 
-```bash
-streamlit run app.py
-```
+* **Learn & Grow:** 🌱🎓 The AI can be prompted to generate etailed explanations help you understand underlying concepts within your subject text.
 
-Your browser should automatically open to the Code Correct AI Chatbot!
+* **Reliable Assistance:** ✅🛡️ Powered by a robust AI model and guided by expert prompt engineering techniques (Chain of Thought, Guardrails, Few-Shot learning).
+
+* **Fast Email utility feature:** 📦🌐 Users can mail their flashcards to themselves for later use.
 
 ---
 
-### Project Structure 📁
+## 🚀 Getting Started
+
+Follow these instructions to get a copy of the project up and running on your local machine.
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+* **Python 3.8+**
+* **pip** (Python package installer)
+
+### Installation
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone [https://github.com/bigm-o/Flash_mind.git](https://github.com/bigm-o/Flash_mind.git)
+    cd Flash_mind
+    ```
+
+2.  **Install the required dependencies:**
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+### API Keys Configuration
+
+FlashMind AI uses Google Gemini API for AI functionalities and SendGrid for email services. You need to configure your API keys securely.
+
+1.  **Create a `.streamlit` directory** in the root of your project if it doesn't already exist.
+    ```bash
+    mkdir .streamlit
+    ```
+
+2.  **Create a `secrets.toml` file** inside the `.streamlit` directory.
+
+3.  **Add your API keys to `secrets.toml`:**
+
+    ```toml
+    # .streamlit/secrets.toml
+
+    GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE"
+    SENDGRID_API_KEY = "YOUR_SENDGRID_API_KEY_HERE"
+    SENDER_EMAIL = "your_verified_sender_email@example.com"
+    ```
+    * Replace `"YOUR_GEMINI_API_KEY_HERE"` with your actual Google Gemini API Key.
+    * Replace `"YOUR_SENDGRID_API_KEY_HERE"` with your actual SendGrid API Key.
+    * Replace `"your_verified_sender_email@example.com"` with an email address you have verified with SendGrid.
+
+    **Note:** You can obtain a Gemini API Key from [Google AI Studio](https://aistudio.google.com/app/apikey). For SendGrid, register at [SendGrid](https://sendgrid.com/) and follow their instructions to get an API Key and verify a sender identity.
+
+---
+
+## 💻 Usage
+
+1.  **Run the Streamlit application:**
+
+    ```bash
+    streamlit run src/app.py
+    ```
+
+    This command will open the application in your default web browser.
+
+2.  **Choose your input method:**
+    * **Upload Document**: Click "Upload Document" and select a PDF, DOCX, or TXT file from your computer.
+    * **Paste Text**: Click "Paste Text" and paste your notes directly into the provided text area.
+
+3.  **Interact with the AI:**
+    * After uploading or pasting, the AI will process your content and provide an initial response.
+    * **Generate Flashcards**: Click the "Generate flashcards for the notes" button (for the initial content) or "Generate Flashcards for this response" (for subsequent AI responses) to create interactive flashcards.
+    * **Engage in Q&A**: Use the chat input box at the bottom to ask the AI questions about your notes or the generated content.
+    * **Email Flashcards**: After generating flashcards, a "📧 Email Flashcards" button will appear. Click it, enter the recipient's email address, and send your flashcards.
+
+---
+
+## 📂 Project Structure
 
 ```
-code_correct/
+Flash Mind Ai/
 ├── .streamlit/
+│   └── config.toml  
 │   └── secrets.toml         # Securely stores your Gemini API Key
 ├── images/
 │   ├── image1              
@@ -197,14 +152,15 @@ code_correct/
 └── README.md                # This file
 ```
 
----
+## 🛠️ Technologies Used
 
-### Customization 🔧
-
-* **AI Prompt:** Modify `prompt.txt` to fine-tune the AI's behavior and responses.
-* **Background:** Change `your_background_image.jpg` in `src` and update the `url()` in `app.py`'s CSS.
-* **Styling:** Adjust the CSS within `app.py` to change colors, fonts, and layout.
-* **Gemini Model:** Experiment with different Gemini models (e.g., `gemini-1.5-pro`) by changing `model = genai.GenerativeModel('gemini-1.5-flash')` in `app.py`.
+* **Python**
+* **Streamlit**: For creating the interactive web application.
+* **Google Gemini API (gemini-1.5-flash)**: For AI-powered text processing, Q&A, and flashcard generation.
+* **python-docx**: For extracting text from `.docx` files.
+* **PyPDF2**: For extracting text from `.pdf` files.
+* **SendGrid**: For sending emails with generated flashcards.
+* **HTML/CSS/JavaScript**: For custom UI components and interactive elements (like flip cards).
 
 ---
 

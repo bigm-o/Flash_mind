@@ -1,5 +1,8 @@
 # Ignore Streamlit secrets file to prevent exposing API keys
 .streamlit/
 
+# Do not ignore config
+!.streamlit/config.toml
+
 # Virtual environment directory
 ai_app_env/
