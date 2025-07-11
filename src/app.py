@@ -14,6 +14,8 @@ import json
 import sendgrid
 from sendgrid.helpers.mail import Mail, Email, To, Content
 
+from streamlit_extras.stylable_container import stylable_container
+
 # --- Gemini API Configuration ---
 gemini_api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_key")
 
@@ -91,7 +93,6 @@ def load_css(file_path):
         st.error(f"Error loading CSS from '{file_path}': {e}")
 
 # --- Load custom CSS for Styling ---
-# Ensure 'static/style.css' exists or remove this line if not using an external file
 load_css("static/style.css")
 
 st.markdown(
@@ -141,7 +142,6 @@ except Exception as e:
 
 # --- Read the prompt from prompt.txt ---
 try:
-    # Ensure this path is correct, e.g., 'src/prompt.txt' or 'prompt.txt'
     with open("src/prompt.txt", "r") as f:
         system_instruction_prompt = f.read().strip()
 except FileNotFoundError:
@@ -187,7 +187,7 @@ def extract_text_from_txt(file_bytes):
 
 # --- Session State Initialization ---
 if "app_state" not in st.session_state:
-    st.session_state.app_state = "initial_input" # New state variable
+    st.session_state.app_state = "initial_input"
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "document_text" not in st.session_state:
@@ -200,9 +200,9 @@ if "first_chat_used" not in st.session_state:
 if "flashcards_for_message_idx" not in st.session_state:
     st.session_state.flashcards_for_message_idx = -1 # Stores the index of the AI message for which flashcards are shown
 if "initial_flashcards_generated" not in st.session_state:
-    st.session_state.initial_flashcards_generated = False # Track if initial flashcards for notes are generated
+    st.session_state.initial_flashcards_generated = False
 if "show_email_form" not in st.session_state:
-    st.session_state.show_email_form = False # New state for showing email form
+    st.session_state.show_email_form = False
 if "generated_flashcards_data" not in st.session_state:
     st.session_state.generated_flashcards_data = [] # Store the generated flashcards
 
@@ -226,7 +226,7 @@ def send_flashcards_email(recipient_email, flashcards_data, subject_title="Flash
         <style>
             body {{ font-family: 'Poppins', sans-serif; line-height: 1.6; color: #333; }}
             .container {{ max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; }}
-            h2 {{ color: #008000; }}
+            h2 {{ color: #555; }}
             .flashcard-section {{ margin-bottom: 20px; border: 1px dashed #ccc; padding: 15px; border-radius: 5px; background-color: #fff; }}
             .question {{ font-weight: bold; color: #555; }}
             .answer {{ color: #008000; margin-top: 5px; }}
@@ -261,7 +261,7 @@ def send_flashcards_email(recipient_email, flashcards_data, subject_title="Flash
 
     try:
         sg = sendgrid.SendGridAPIClient(sendgrid_api_key)
-        from_email = Email(sender_email)  # Your verified sender email
+        from_email = Email(sender_email)
         to_email = To(recipient_email)
         subject = f"Your Flashcards from FlashMind AI have arrived!!!"
         content = Content("text/html", email_body_html)
@@ -333,7 +333,6 @@ def generate_flashcards(source_text, max_flashcards=15):
         # Store generated flashcards in session state
         st.session_state.generated_flashcards_data = flashcards_data
 
-        # --- Dynamically construct the HTML string ---
         # The CSS for the flipping effect
         css = """
         <style>
@@ -382,7 +381,7 @@ def generate_flashcards(source_text, max_flashcards=15):
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 1.2rem;
+                font-size: 1.1rem;
                 background: rgba(0, 0, 0, 0.1);
                 color: #67f88e; /* Changed to match border color */
             }
@@ -406,7 +405,7 @@ def generate_flashcards(source_text, max_flashcards=15):
         """
 
         # The JavaScript for creating and flipping cards
-        # We inject flashcards_data directly as a JSON string
+        # inject flashcards_data directly as a JSON string
         js_script = f"""
         <script>
             const flashcardsData = {json.dumps(flashcards_data)}; // Inject Python list as JSON
@@ -439,7 +438,6 @@ def generate_flashcards(source_text, max_flashcards=15):
         """
 
         # Combine HTML structure, CSS, and JavaScript
-        # Use a triple-quoted string for multi-line HTML
         html_content = f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -549,49 +547,68 @@ if st.session_state.app_state == "initial_input":
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown(
+
+        with stylable_container(
+            key="upload_doc_box_style",
+            css_styles="""
+                {
+                    border: 2px dashed #007bff;
+                    color: white;
+                    padding: 20px;
+                    text-align: center;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    height: 150px;
+                    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+                    background-color: rgba(255, 255, 255, 0.1);
+                    position: relative; /* Needed for positioning the hidden button */
+                }
+                /* Style the paragraph text within the container (not the button label) */
+                p {
+                    font-weight: bold;
+                }
             """
-            <div class="input-option-box" id="upload_doc_box">
-                <i class="fas fa-file-upload"></i>
-                <p>Upload Document</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        # Hidden button for the "Upload Document" box click
-        if st.button("Hidden Upload Trigger", key="hidden_upload_trigger", help="Click to upload"):
-            st.session_state.app_state = "uploading_document"
-            st.rerun()
+        ):
+            
+            if st.button("Upload Document", key="hidden_upload_trigger"):
+                st.session_state.app_state = "uploading_document"
+                st.rerun()
+            st.markdown("<p></p>", unsafe_allow_html=True)
+
 
     with col2:
-        st.markdown(
+        with stylable_container(
+            key="paste_text_box_style",
+            css_styles="""
+                {
+                    border: 2px dashed #007bff;
+                    color: white;
+                    padding: 20px;
+                    text-align: center;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    height: 150px;
+                    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+                    background-color: rgba(255, 255, 255, 0.1);
+                    position: relative;
+                }
+                p {
+                    font-weight: bold;
+                }
             """
-            <div class="input-option-box" id="paste_text_box">
-                <i class="fas fa-paste"></i>
-                <p>Paste Text</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        # Hidden button for the "Paste Text" box click
-        if st.button("Hidden Paste Trigger", key="hidden_paste_trigger", help="Click to paste"):
-            st.session_state.app_state = "pasting_text"
-            st.rerun()
-
-        # JavaScript to trigger the hidden buttons on box click
-        st.markdown(
-            """
-            <script>
-            document.getElementById('upload_doc_box').onclick = function() {
-                document.querySelector('button[key="hidden_upload_trigger"]').click();
-            };
-            document.getElementById('paste_text_box').onclick = function() {
-                document.querySelector('button[key="hidden_paste_trigger"]').click();
-            };
-            </script>
-            """,
-            unsafe_allow_html=True
-        )
+        ):
+            if st.button("Paste Text", key="hidden_paste_trigger"):
+                st.session_state.app_state = "pasting_text"
+                st.rerun()
+            st.markdown("<p></p>", unsafe_allow_html=True)
 
 
 # Display file uploader if "Upload Document" was clicked

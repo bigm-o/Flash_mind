@@ -173,7 +173,7 @@ h1, h2, h3, h4, h5, h6 {
 .simple-repo-button {
     background-color: #282c34;
     color: white;
-    border: 2px solid #61dafb;
+    border: 2px solid #007bff;
     padding: 12px 25px;
     border-radius: 8px;
     font-size: 1.2rem;
@@ -187,10 +187,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .simple-repo-button:hover {
-    background-color: #61dafb !important; 
-    color: #282c34 !important; 
+    background-color: #0352a6 !important; 
+    color: rgb(225, 225, 225) !important; 
     transform: translateY(-2px); 
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    border: 2px solid rgb(155, 155, 155);
 }
 
 /* Hide element on small mobile devices */
@@ -229,40 +230,6 @@ h1, h2, h3, h4, h5, h6 {
     padding-top: 1.2rem;
 }
 
-/* Custom styling for the input option boxes */
-.input-option-box {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 2px solid #4CAF50;
-    border-radius: 15px;
-    padding: 30px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    height: 150px;
-    /* width: 200px; */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-.input-option-box:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: #45a049;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    transform: translateY(-5px);
-}
-.input-option-box i {
-    font-size: 3em;
-    margin-bottom: 15px;
-    color: #4CAF50;
-}
-.input-option-box p {
-    font-size: 1.5em;
-    margin: 0;
-    color: #ffffff;
-}
 /* Hide Streamlit's default file uploader and button elements */
 .stFileUploader > div > div > button,
 .stButton > button[key="paste_text_trigger_button_visible"] { 
