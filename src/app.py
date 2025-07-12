@@ -287,6 +287,7 @@ def generate_flashcards(source_text, max_flashcards=15):
     st.markdown(
         """
             <p style="font-size:1.5rem; color: white; display: flex; align-items: center; justify-content: center; text-align: center;">Flashcards</p>
+            <small style="font-size:1rem; color: #67f88e; display: flex; align-items: center; justify-content: center; text-align: center;">(Click Flashcards to Flip)</small>
         """,
         unsafe_allow_html=True
     )
@@ -459,6 +460,12 @@ def generate_flashcards(source_text, max_flashcards=15):
         estimated_height = len(flashcards_data) * 200 
         components.html(html_content, height=estimated_height, scrolling=False)
 
+        st.markdown(
+            """
+                <small style="font-size:1rem; color: #67f88e; display: flex; align-items: center; justify-content: center; text-align: center;">(Click Flashcards to Flip)</small>
+            """,
+            unsafe_allow_html=True
+        )
         # Add the "Email Flashcards" button
         st.markdown("---") # Separator
         if st.button("📧 Email Flashcards", key="email_flashcards_button"):
