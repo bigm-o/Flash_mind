@@ -468,7 +468,7 @@ def generate_flashcards(source_text, max_flashcards=15):
         )
         # Add the "Email Flashcards" button
         st.markdown("---") # Separator
-        if st.button("📧 Email Flashcards", key="email_flashcards_button"):
+        if st.button("📧 Email My Flashcards", key="email_flashcards_button"):
             st.session_state.show_email_form = not st.session_state.show_email_form # Toggle form visibility
             st.rerun()
 
